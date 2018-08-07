@@ -1,4 +1,4 @@
-package main
+package fields
 
 import (
 	"bufio"
@@ -48,14 +48,14 @@ func (f *reverseFieldFormatter) transform(parts []string) string {
 	return ""
 }
 
-func getSplitter(seperator *string) func(string) []string {
+func getSplitter(separator *string) func(string) []string {
 
-	if seperator == nil || *seperator == "" {
+	if separator == nil || *separator == "" {
 		return strings.Fields
 	}
 
 	return func(s string) []string {
-		return strings.Split(s, *seperator)
+		return strings.Split(s, *separator)
 	}
 }
 
@@ -95,7 +95,7 @@ func execute(formatters []formatter, fields []string) {
 }
 
 func main() {
-	seperator := flag.String("seperator", "", "field seperators")
+	separator := flag.String("separator", "", "field separators")
 
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: fields [options] <format>\n")
@@ -121,7 +121,7 @@ func main() {
 	formatters := parsePattern(leftArgs[0])
 
 	scanner := bufio.NewScanner(os.Stdin)
-	splitter := getSplitter(seperator)
+	splitter := getSplitter(separator)
 	for scanner.Scan() {
 		fields := splitter(scanner.Text())
 		execute(formatters, fields)
